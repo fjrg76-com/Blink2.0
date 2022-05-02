@@ -56,19 +56,19 @@ namespace Blink{
          };
 
 
-         Blink( fjrg76::hal::Blink::IBlinkable& new_gpio );
+         Blink( fjrg76::hal::Blink::IBlinkable& new_gpio, ePolarity polarity = ePolarity::ACTIVE_HIGH );
          Blink& operator=(Blink&) = delete; ///< Copies are not allowed
          Blink(Blink&) = delete;            ///< Copy assignements are not allowed
 
-         void begin( ePolarity polarity = ePolarity::ACTIVE_HIGH );
-         void set( eMode mode, uint16_t ticks_on, uint16_t ticks_off = 0, uint16_t times = 1);
-         void start();
-         void stop();
+         Blink& begin( ePolarity polarity = ePolarity::ACTIVE_HIGH );
+         Blink& set( eMode mode, uint16_t ticks_on, uint16_t ticks_off = 0, uint16_t times = 1);
+         Blink& start();
+         Blink& stop();
          void state_machine();
          bool is_running();
 
-         void always_on();
-         void always_off();
+         Blink& always_on();
+         Blink& always_off();
 
       private:
          fjrg76::hal::Blink::IBlinkable& gpio;

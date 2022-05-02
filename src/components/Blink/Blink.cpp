@@ -20,8 +20,8 @@
 
 using namespace fjrg76::components::Blink;
 
-Blink::Blink( fjrg76::hal::Blink::IBlinkable& new_gpio ) 
-   : gpio{new_gpio}
+Blink::Blink( fjrg76::hal::Blink::IBlinkable& new_gpio, Blink::ePolarity polarity )
+   : gpio{new_gpio}, polarity{polarity}
 {
    gpio.pin_state( static_cast<uint8_t>(this->polarity) ^ 0 );
 }
@@ -32,11 +32,11 @@ Blink::Blink( fjrg76::hal::Blink::IBlinkable& new_gpio )
  * @param pin Binds this object to the microcontroller's pin.
  * @param polarity Sets the pin's active state. @see ePolarity.
  */
-void Blink::begin( ePolarity polarity )
+Blink& Blink::begin( ePolarity polarity )
 {
    this->polarity = polarity;
-
    gpio.pin_state( static_cast<uint8_t>(this->polarity) ^ 0 );
+   return *this;
 }
 
 /**
@@ -47,18 +47,19 @@ void Blink::begin( ePolarity polarity )
  * @param ticks_off The number of ticks that the pin will stay in its inactive state (OFF).
  * @param times The number of cycles that the pin will repeat. This parameter only has meaning when the pin's mode has been set as eMode::REPETITIVE, and it's ignored in the other modes.
  */
-void Blink::set( eMode mode, uint16_t ticks_on, uint16_t ticks_off, uint16_t times )
+Blink& Blink::set( eMode mode, uint16_t ticks_on, uint16_t ticks_off, uint16_t times )
 {
    this->mode         = mode;
    this->ticks_onMOD  = ticks_on;
    this->ticks_offMOD = ticks_off;
    this->timesMOD     = times;
+   return *this;
 }
 
 /**
  * @brief Starts the cycle.
  */
-void Blink::start()
+Blink& Blink::start()
 {
    this->running = false;
 
@@ -73,14 +74,16 @@ void Blink::start()
    this->running = true;
 
    gpio.pin_state( static_cast<uint8_t>(this->polarity) ^ 1 );
+   return *this;
 }
 
 /**
  * @brief Stops the cycle.
  */
-void Blink::stop()
+Blink& Blink::stop()
 {
    this->running = false;
+   return *this;
 }
 
 /**
@@ -155,18 +158,20 @@ bool Blink::is_running()
  * @brief The pin is always ON regardless of its configuration (useful when
  * the pin must remain ON all the time).
  */
-void Blink::always_on()
+Blink& Blink::always_on()
 {
    this->running = false;
    gpio.pin_state( static_cast<uint8_t>(this->polarity) ^ 1 );
+   return *this;
 }
 
 /**
  * @brief The pin is always OFF regardless of its configuration (useful when
  * the pin must remain OFF all the time).
  */
-void Blink::always_off()
+Blink& Blink::always_off()
 {
    this->running = false;
    gpio.pin_state( static_cast<uint8_t>(this->polarity) ^ 0 );
+   return *this;
 }

@@ -92,7 +92,7 @@ int main()
     //fjrg76::components::Blink::Blink led13( led_pc );
 
     // using using:
-    Blink led13( led_pc );
+    Blink led13( led_pc, Blink::ePolarity::ACTIVE_HIGH );
 #endif
 
 #ifdef PLATFORM_ARDUINO
@@ -110,10 +110,8 @@ int main()
 #endif  
 
     // using using:
-    led13.begin( Blink::ePolarity::ACTIVE_HIGH );
-    led13.set( Blink::eMode::FOREVER, 2, 3 );
-
-    led13.start();
+//    led13.begin( Blink::ePolarity::ACTIVE_HIGH );
+    led13.set( Blink::eMode::FOREVER, 2, 3 ).start();
 
    for( int i = 0; i < 20; ++i )
    {
